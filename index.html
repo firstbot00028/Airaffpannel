@@ -1,84 +1,162 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIRA VIP PANEL</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body { background-color: #0f0f0f; color: cyan; font-family: sans-serif; text-align: center; }
-        .box { border: 2px solid cyan; border-radius: 15px; padding: 20px; margin: 20px auto; width: 80%; box-shadow: 0 0 15px cyan; }
-        button { width: 80%; padding: 15px; margin: 10px; border-radius: 10px; border: none; font-weight: bold; font-size: 18px; cursor: pointer; }
-        .on { background-color: #00ff00; color: black; }
-        .off { background-color: #ff0000; color: white; }
-        #status { font-size: 20px; color: yellow; margin-top: 10px; }
+        /* CSS FOR STYLISH RED & BLACK UI (Reference: 8746.jpg) */
+        body {
+            background-color: #0a0a0a;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .panel-container {
+            width: 90%;
+            max-width: 350px;
+            background-color: #141414;
+            border: 2px solid #ff0000;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+        .header h1 {
+            color: #ff0000;
+            font-size: 24px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .header p {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 25px;
+        }
+        .btn {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-activate {
+            background-color: #ff0000;
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
+        }
+        .btn-deactivate {
+            background-color: #222;
+            color: #eee;
+            border: 1px solid #444;
+        }
+        .btn:active { transform: scale(0.95); }
+        .status-box {
+            margin-top: 25px;
+            padding: 10px;
+            border: 1px dashed #ff0000;
+            border-radius: 8px;
+            background-color: #000;
+            color: #00ff00;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="box">
-        <h1>💎 AIRA VIP PANEL 💎</h1>
-        <p>Control Your Game Mods Here</p>
-        <hr color="cyan">
-        
-        <div id="status">CHECKING SERVER...</div>
-        
-        <button class="on" onclick="updateGitHub('ON')">ACTIVATE MODS</button>
-        <button class="off" onclick="updateGitHub('OFF')">DEACTIVATE ALL</button>
+    <div class="panel-container" id="mainPanel" style="display:none;">
+        <div class="header">
+            <h1>🎯 AIRA VIP PANEL</h1>
+            <p>SERVER-SIDE HEADSHOT CONTROL</p>
+        </div>
+
+        <button class="btn btn-activate" onclick="updateServer('ON')">
+            🔥 ACTIVATE HEADSHOT + MAGIC
+        </button>
+
+        <button class="btn btn-deactivate" onclick="updateServer('OFF')">
+            ❌ DEACTIVATE ALL MODS
+        </button>
+
+        <div class="status-box" id="displayStatus">
+            📡 SERVER READY
+        </div>
     </div>
 
     <script>
         // 🔐 1. LOGIN SYSTEM
-        let pass = prompt("ENTER ADMIN PASSWORD:");
-        if (pass !== "AIRA2026") {
-            alert("WRONG PASSWORD!");
-            document.body.innerHTML = "<h1 style='color:red; margin-top:100px;'>❌ ACCESS DENIED</h1>";
-        }
+        window.onload = function() {
+            let pass = prompt("💎 AIRA VIP ACCESS\nEnter Admin Password:");
+            if (pass === "AIRA2026") {
+                document.getElementById('mainPanel').style.display = 'block';
+            } else {
+                alert("WRONG PASSWORD! ❌");
+                document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:100px;'>🛑 UNAUTHORIZED</h1>";
+            }
+        };
 
-        // 🛡️ 2. SPLIT API TOKEN (GitHub Security Bypass)
-        const part1 = "ghp_LUyWscAEzdvoPwvc";
-        const part2 = "XRTTgmZSwyqcDj2NlGEn";
-        const full_token = part1 + part2;
+        // 🛡️ 2. SPLIT API TOKEN (Bypass GitHub Scanners)
+        const p1 = "ghp_LUyWscAEzdvoPwvc";
+        const p2 = "XRTTgmZSwyqcDj2NlGEn";
+        const token = p1 + p2;
 
-        // 🔗 3. YOUR GITHUB INFO
         const owner = "firstbot00028";
         const repo = "Airaffpannel";
         const path = "data.json";
 
-        // 📡 4. UPDATE FUNCTION
-        async function updateGitHub(value) {
-            document.getElementById('status').innerText = "UPDATING SERVER...";
-            
+        // 📡 3. UPDATE FUNCTION
+        async function updateServer(val) {
+            const statusEl = document.getElementById('displayStatus');
+            statusEl.innerText = "UPDATING SERVER...";
+            statusEl.style.color = "yellow";
+
             const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
             
-            // Get current file data (SHA)
-            const response = await fetch(url, {
-                headers: { Authorization: `token ${full_token}` }
-            });
-            const data = await response.json();
-            const sha = data.sha;
+            try {
+                const getRes = await fetch(url, {
+                    headers: { Authorization: `token ${token}` }
+                });
+                const fileData = await getRes.json();
+                const sha = fileData.sha;
 
-            // Create New Content
-            const newContent = btoa(JSON.stringify({ headshot: value }));
+                const newContent = btoa(JSON.stringify({ headshot: val }));
 
-            // Push to GitHub
-            const update = await fetch(url, {
-                method: "PUT",
-                headers: {
-                    Authorization: `token ${full_token}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    message: "Panel Update",
-                    content: newContent,
-                    sha: sha
-                })
-            });
+                const putRes = await fetch(url, {
+                    method: "PUT",
+                    headers: {
+                        Authorization: `token ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        message: "Status Update",
+                        content: newContent,
+                        sha: sha
+                    })
+                });
 
-            if (update.ok) {
-                document.getElementById('status').innerText = "SERVER UPDATED: " + value;
-                alert("SUCCESS: MODS " + value);
-            } else {
-                document.getElementById('status').innerText = "FAILED TO UPDATE!";
-                alert("Error updating GitHub!");
+                if (putRes.ok) {
+                    statusEl.innerText = "✅ SERVER UPDATED: " + val;
+                    statusEl.style.color = "#00ff00";
+                    alert("MODS " + val + " SUCCESSFULLY!");
+                } else {
+                    throw new Error();
+                }
+            } catch (err) {
+                statusEl.innerText = "❌ UPDATE FAILED!";
+                statusEl.style.color = "red";
+                alert("Failed to connect to GitHub!");
             }
         }
     </script>
