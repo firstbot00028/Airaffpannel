@@ -1,6 +1,5 @@
 {
-  "headshot": "OFF",
-  "aimlock": "OFF",
-  "version": "1.0"
+  "headshot": "ON",
+  "magic_body": "ON",
+  "time": "02/03/2026, 16:08:20"
 }
-
