@@ -1,0 +1,16 @@
+{
+  "short_name": "AiraPanel",
+  "name": "Aira Headshot Control",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/771/771210.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "index.html",
+  "background_color": "#0a0a0a",
+  "display": "standalone",
+  "theme_color": "#ff0000"
+}
+
