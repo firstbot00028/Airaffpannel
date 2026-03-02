@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIRA VIP PANEL</title>
+    <style>
+        body { background: #0a0a0a; color: #ff0000; font-family: sans-serif; text-align: center; }
+        .box { border: 2px solid #ff0000; padding: 20px; margin: 20px; border-radius: 15px; box-shadow: 0 0 20px #ff0000; }
+        button { background: #ff0000; color: #fff; border: none; padding: 15px 30px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; margin: 10px 0; }
+        .info { color: #00ff00; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>🎯 AIRA VIP CONTROL</h1>
+        <p>Server-Side Headshot Control</p>
+        <hr color="#333">
+        <button onclick="updateStatus('ON')">ACTIVATE HEADSHOT</button>
+        <button onclick="updateStatus('OFF')" style="background:#333;">DEACTIVATE</button>
+        <div id="status" class="info">Current: Fetching...</div>
+    </div>
+
+    <script>
+        // GitHub API vazhi data.json update cheyyan ulla function
+        async function updateStatus(val) {
+            document.getElementById('status').innerHTML = "Updating Server...";
+            // Note: Real GitHub API update-inu 'PAT Token' venam. 
+            // Ippo ninakku manually GitHub-il file edit cheyyaam, 
+            // dashboard-il ithu engane varum ennu namukku set aakkaam.
+            alert("Headshot Status Changed to: " + val);
+            document.getElementById('status').innerHTML = "Current: " + val;
+        }
+    </script>
+</body>
+</html>
