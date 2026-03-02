@@ -28,6 +28,66 @@
     
 
     <script>
+        // --- JS START ---
+const TOKEN = "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"; // Ninte token ivide idu
+const OWNER = "firstbot00028";
+const REPO = "Airaffpannel";
+const FILE_PATH = "data.json";
+
+async function sendUpdate(val) {
+    const log = document.getElementById('log');
+    log.innerHTML = "Connecting to Server...";
+    log.style.color = "#ffcc00";
+
+    try {
+        const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
+        
+        // 1. Current file details fetch cheyyan (SHA kittaan)
+        const getRes = await fetch(url, {
+            headers: { "Authorization": `token ${TOKEN}` }
+        });
+        const fileData = await getRes.json();
+        const sha = fileData.sha;
+
+        // 2. Puthiya data set cheyyan
+        const newContent = {
+            headshot: val,
+            magic_body: val,
+            updated_at: new Date().toLocaleString()
+        };
+        
+        // JSON-ne Base64-lekku maattanum (GitHub API rule aanu)
+        const encodedContent = btoa(unescape(encodeURIComponent(JSON.stringify(newContent, null, 2))));
+
+        // 3. GitHub-ilekku push cheyyan
+        const putRes = await fetch(url, {
+            method: "PUT",
+            headers: {
+                "Authorization": `token ${TOKEN}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: `Status Changed to ${val}`,
+                content: encodedContent,
+                sha: sha
+            })
+        });
+
+        if (putRes.ok) {
+            log.innerHTML = `✅ SERVER UPDATED: ${val}`;
+            log.style.color = "#00ff00";
+        } else {
+            log.innerHTML = "❌ FAILED! Check Token or Repo Name.";
+            log.style.color = "#ff0000";
+        }
+
+    } catch (error) {
+        log.innerHTML = "⚠️ ERROR: " + error.message;
+        log.style.color = "#ff0000";
+    }
+}
+// --- JS END ---
+        
         // GitHub API vazhi data.json update cheyyan ulla function
         async function updateStatus(val) {
             document.getElementById('status').innerHTML = "Updating Server...";
